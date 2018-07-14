@@ -105,3 +105,9 @@ public class Skellett extends JavaPlugin {
 		for (String text : messages) Bukkit.getConsoleSender().sendMessage(Utils.cc(prefix + text));
 	}
 }
+/*
+TODO: Make most of the conditions a property type.
+
+
+
+*/
