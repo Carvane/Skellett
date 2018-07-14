@@ -1,0 +1,107 @@
+package me.limeglass.skellett.utils;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
+import ch.njol.skript.Skript;
+import io.netty.channel.Channel;
+
+public class ReflectionUtil {
+	
+	public static String getVersion() {
+		return Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".";
+	}
+	
+	public static Class<?> getNMSClass(String classString) throws ClassNotFoundException {
+		String name = "net.minecraft.server." + getVersion() + classString;
+		Class<?> nmsClass = Class.forName(name);
+		return nmsClass;
+	}
+	
+	public static Class<?> getOBCClass(String classString) {
+		String name = "org.bukkit.craftbukkit." + getVersion() + classString;
+		@SuppressWarnings("rawtypes")
+		Class obcClass = null;
+		try {
+			obcClass = Class.forName(name);
+		}
+		catch (ClassNotFoundException error) {
+			error.printStackTrace();
+			return null;
+		}
+		return obcClass;
+	}
+	
+	public static Channel getChannel(Player player) {
+		Object connection = getConnection(player);
+		try {
+			Field field = connection.getClass().getField("networkManager");
+			Object networkManager = field.get(connection);
+			Field channelField = networkManager.getClass().getField("channel");
+			return (Channel) channelField.get(networkManager);
+		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+			Skript.exception(e, "Error grabbing the player " + player.getName() + "'s Netty channel.");
+		}
+		return null;
+	}
+	
+	public static Object getConnection(Player player) {
+		try {
+			Object nmsPlayer = getHandle(player);
+			Field field = nmsPlayer.getClass().getField("playerConnection");
+			return field.get(nmsPlayer);
+		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+			Skript.exception(e, "Error grabbing the player " + player.getName() + "'s connection");
+		}
+		return null;
+	}
+	
+	public static <T> boolean setField(Class<T> from, Object obj, String field, Object newValue){
+		try {
+			Field f = from.getDeclaredField(field);
+			f.setAccessible(true);
+			f.set(obj, newValue);
+			return true;
+		} catch (Exception e){}
+		return false;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T getField(String field, Class<?> from, Object obj){
+		try{
+			Field f = from.getDeclaredField(field);
+			f.setAccessible(true);
+			return (T) f.get(obj);
+		} catch (Exception e){}
+		return null;	
+	}
+	
+	public static Object getHandle(Object obj) {
+		if (obj != null) {
+			try {
+				Method getHandle = obj.getClass().getMethod("getHandle");
+				getHandle.setAccessible(true);
+				return getHandle.invoke(obj);
+			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	public static void sendPacket(Object object, Player... players) {
+		try {
+			for (Player player: players) {
+				Object connection = getConnection(player);
+				Method method = connection.getClass().getMethod("sendPacket", getNMSClass("Packet"));
+				method.invoke(connection, object);
+			}
+		} catch (NoSuchMethodException | SecurityException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			Skript.exception(e, "Failed to send packet to player(s).");
+		}
+	}
+}

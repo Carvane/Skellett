@@ -1,0 +1,7 @@
+name: Skellett
+author: LimeGlass
+description: The essential Skript addon.
+version: 2.0.0
+website: https://forums.skunity.com/resources/skellett.24/
+main: me.limeglass.skellett.Skellett
+depend: [Skript]
