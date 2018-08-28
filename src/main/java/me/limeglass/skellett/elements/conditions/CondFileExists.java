@@ -18,4 +18,5 @@ public class CondFileExists extends SkellettCondition {
 		File file = new File(expressions.getSingle(event, String.class));
         return (file.exists()) ? isNegated() : !isNegated();
 	}
+
 }

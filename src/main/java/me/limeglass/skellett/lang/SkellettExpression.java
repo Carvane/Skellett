@@ -85,7 +85,7 @@ public abstract class SkellettExpression<T> extends SimpleExpression<T> implemen
 	@Override
 	public Class<?>[] acceptChange(final Changer.ChangeMode mode) {
 		Class<?>[] returnable = (getClass().isAnnotationPresent(Multiple.class)) ? CollectionUtils.array(Utils.getArrayClass(expressionClass)) : CollectionUtils.array(expressionClass);
-		if (getClass().isAnnotationPresent(Settable.class)) returnable = getClass().getAnnotation(Settable.class).value();
+		if (getClass().isAnnotationPresent(Settable.class)) returnable = getClass().getAnnotation(Settable.class).values();
 		if (getClass().isAnnotationPresent(AllChangers.class)) return returnable;
 		if (!getClass().isAnnotationPresent(Changers.class)) return null;
 		return (Arrays.asList(getClass().getAnnotation(Changers.class).value()).contains(mode)) ? returnable : null;

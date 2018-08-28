@@ -3,21 +3,24 @@ package me.limeglass.skellett.elements.conditions;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Zombie;
-import org.bukkit.event.Event;
 
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Name;
-import me.limeglass.skellett.lang.SkellettCondition;
-import me.limeglass.skellett.utils.annotations.Patterns;
+import me.limeglass.skellett.lang.SkellettPropertyCondition;
+import me.limeglass.skellett.lang.SkellettPropertyCondition.PropertyMode;
+import me.limeglass.skellett.utils.annotations.Properties;
+import me.limeglass.skellett.utils.annotations.PropertyConditionType;
+import me.limeglass.skellett.utils.annotations.Type;
 
 @Name("Adult condition")
 @Description("Test if an entity is an Adult stage, if it's a Zombie it will test if the zombie is a baby or not.")
-@Patterns("%entity% (1¦is|2¦is(n't| not)) [a[n]] adult")
-public class CondIsAdult extends SkellettCondition {
+@PropertyConditionType(PropertyMode.IS_AND_ARE)
+@Properties("[a[n]] adult")
+@Type("entities")
+public class CondIsAdult extends SkellettPropertyCondition<Entity> {
 	
-	public boolean check(Event event) {
-		if (areNull(event)) return !isNegated();
-		Entity entity = expressions.getSingle(event, Entity.class);
+	@Override
+	public boolean check(Entity entity) {
 		if (entity instanceof Ageable) {
 			return (((Ageable)entity).isAdult()) ? isNegated() : !isNegated();
 		} else if (entity instanceof Zombie) {
@@ -25,4 +28,5 @@ public class CondIsAdult extends SkellettCondition {
 		}
 		return false;
 	}
+
 }

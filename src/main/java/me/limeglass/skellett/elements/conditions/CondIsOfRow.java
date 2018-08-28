@@ -35,4 +35,5 @@ public class CondIsOfRow extends SkellettCondition {
 		}
 		return false;
 	}
+
 }

@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import ch.njol.skript.Skript;
@@ -103,5 +104,16 @@ public class ReflectionUtil {
 		} catch (NoSuchMethodException | SecurityException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			Skript.exception(e, "Failed to send packet to player(s).");
 		}
+	}
+	
+	public static Object getNMSBlock(Block block) {
+		try {
+			Method method = ReflectionUtil.getOBCClass("util.CraftMagicNumbers").getDeclaredMethod("getBlock", Block.class);
+			method.setAccessible(true);
+			return method.invoke(ReflectionUtil.getOBCClass("util.CraftMagicNumbers"), block);
+		} catch (SecurityException | IllegalArgumentException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e1) {
+			e1.printStackTrace();
+		}
+		return null;
 	}
 }

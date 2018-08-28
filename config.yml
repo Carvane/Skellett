@@ -15,3 +15,24 @@ UseEnglishEnums: true
 
 # Disables the message saying the addon was enabled.
 DisableRegisteredInfo: false
+
+# This is a list of all versions Skellett uses to test what version the server is. Helpful for syntax that are version based.
+# So if a new version comes out and it's not listed here, you can add it and Skellett will use NMS from that version, assuming Mojang didn't change anything drastic.
+# Order matters.
+versions:
+  - "1.7.10"
+  - "1.8R1"
+  - "1.8R2"
+  - "1.8R3"
+  - "1.9R1"
+  - "1.9R2"
+# - "1.9R3" - Was there really a R3? lol (Spigot memes)
+  - "1.10"
+  - "1.11"
+  - "1.11.2"
+  - "1.12"
+  - "1.12.1"
+  - "1.12.2"
+  
+ # Disables the warning message saying a syntax can't be registered due to the incorrect Spigot version for the syntax.
+DisableCompatableWarning: false

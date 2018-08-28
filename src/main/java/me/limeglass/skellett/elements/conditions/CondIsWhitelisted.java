@@ -15,4 +15,5 @@ public class CondIsWhitelisted extends SkellettCondition {
 	public boolean check(Event event) {
 		return (Bukkit.hasWhitelist()) ? isNegated() : !isNegated();
 	}
+
 }

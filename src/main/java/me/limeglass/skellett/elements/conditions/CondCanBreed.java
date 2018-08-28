@@ -2,20 +2,25 @@ package me.limeglass.skellett.elements.conditions;
 
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Name;
-import me.limeglass.skellett.lang.SkellettCondition;
-import me.limeglass.skellett.utils.annotations.Patterns;
+import me.limeglass.skellett.lang.SkellettPropertyCondition;
+import me.limeglass.skellett.lang.SkellettPropertyCondition.PropertyMode;
+import me.limeglass.skellett.utils.annotations.Properties;
+import me.limeglass.skellett.utils.annotations.PropertyConditionType;
+import me.limeglass.skellett.utils.annotations.Type;
 
-@Name("Entity Breed")
-@Description("Test if an entity can breed, e.g: sheep, cows or pigs.")
-@Patterns("%entity% (1¦can|2¦can([ ]no|')t) [be] breed")
-public class CondCanBreed extends SkellettCondition {
-	
-	public boolean check(Event event) {
-		if (areNull(event)) return !isNegated();
-		Entity entity = expressions.getSingle(event, Entity.class);
-		return (((Ageable)entity).canBreed()) ? isNegated() : !isNegated();
+@Name("Entity can breed")
+@Description("Check if the defined entities can breed.")
+@PropertyConditionType(PropertyMode.CAN)
+@Properties("[be] bre[e]d")
+@Type("entities")
+public class CondCanBreed extends SkellettPropertyCondition<Entity> {
+
+	@Override
+	public boolean check(Entity entity) {
+		if (!(entity instanceof Ageable)) return !isNegated();
+		return (((Ageable) entity).canBreed()) ? isNegated() : !isNegated();
 	}
+
 }

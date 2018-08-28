@@ -19,6 +19,6 @@ public @interface RegisterType {
 	@SuppressWarnings("rawtypes")
 	public Class ExprClass() default String.class;
 	
-    public String value();
-}
+	public String value();
 
+}

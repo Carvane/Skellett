@@ -3,8 +3,11 @@ apply plugin: 'eclipse'
 
 jar.archiveName = project.name + '.jar'
 
+def NMS = '1.12.2'
+
 repositories {
     mavenCentral()
+    mavenLocal()
     jcenter()
     
     //Spigot
@@ -15,6 +18,11 @@ repositories {
     //Skript
     maven {
         url "https://raw.githubusercontent.com/bensku/mvn-repo/master"
+    }
+    
+    //Bukkit
+    maven {
+    	url = 'https://oss.sonatype.org/content/repositories/snapshots'
     }
 }
 
@@ -33,4 +41,9 @@ dependencies {
 	
 	//Netty - which all servers running Minecraft should already have.
 	compile (group: 'io.netty', name: 'netty-all', version: '4.1.27.Final')
+	
+	//NMS
+	compileOnly 'org.bukkit:craftbukkit:1.12.2-R0.1-SNAPSHOT'
+	//compile (group: 'org.bukkit', name: 'bukkit', version: '1.12.2-R0.1-SNAPSHOT')
+	//compile (group: 'org.bukkit', name: 'craftbukkit', version: '1.12.2-R0.1-SNAPSHOT')
 }

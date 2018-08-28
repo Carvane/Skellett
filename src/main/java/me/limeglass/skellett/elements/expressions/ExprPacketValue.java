@@ -31,4 +31,5 @@ public class ExprPacketValue extends SkellettExpression<Object> {
 			((PacketEvent)event).getPacket().setValue(field, (Object)delta[0]);
 		}
 	}
+
 }

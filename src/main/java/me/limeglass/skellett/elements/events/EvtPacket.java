@@ -38,5 +38,5 @@ public class EvtPacket extends SkellettEvent<PacketEvent> {
 		}
 		return false;
 	}
-}
 
+}

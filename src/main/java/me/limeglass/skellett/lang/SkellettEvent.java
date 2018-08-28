@@ -46,19 +46,5 @@ public abstract class SkellettEvent<T extends Event> extends SkriptEvent impleme
 		if (event != null) Skellett.debugMessage(getClass().getSimpleName() + " - " + modSyntax + " (" + event.getEventName() + ")" + " Data: " + Arrays.toString(values.toArray()));
 		return getClass().getSimpleName() + " - " + Arrays.toString(getSyntax());
 	}
-	
-	protected Boolean isNull(Event event, @SuppressWarnings("unchecked") Class<T>... types) {
-		return isNull(event, literals, types);
-	}
-	
-	protected Boolean isNull(Event event, int... index) {
-		for (int i : index) {
-			if (isNull(event, literals, i)) return true;
-		}
-		return false;
-	}
 
-	protected Boolean areNull(Event event) {
-		return areNull(event, literals);
-	}
 }

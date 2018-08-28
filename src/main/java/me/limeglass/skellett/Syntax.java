@@ -14,6 +14,7 @@ import me.limeglass.skellett.utils.Utils;
 import me.limeglass.skellett.utils.annotations.AllChangers;
 import me.limeglass.skellett.utils.annotations.Changers;
 import me.limeglass.skellett.utils.annotations.Disabled;
+import me.limeglass.skellett.utils.annotations.Versions;
 
 public class Syntax {
 
@@ -43,6 +44,11 @@ public class Syntax {
 		if (syntaxClass.isAnnotationPresent(Description.class)) {
 			String[] descriptions = syntaxClass.getAnnotation(Description.class).value();
 			Skellett.getConfiguration("syntax").set(node + "description", descriptions[0]);
+			Skellett.save("syntax");
+		}
+		if (syntaxClass.isAnnotationPresent(Versions.class)) {
+			String[] versions = syntaxClass.getAnnotation(Versions.class).value();
+			Skellett.getConfiguration("syntax").set(node + "versions", versions);
 			Skellett.save("syntax");
 		}
 		if (!Skellett.getConfiguration("syntax").getBoolean(node + "enabled")) {
@@ -77,4 +83,5 @@ public class Syntax {
 		}
 		return syntax;
 	}
+
 }

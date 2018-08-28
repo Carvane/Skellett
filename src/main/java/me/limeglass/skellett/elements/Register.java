@@ -8,6 +8,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -23,17 +24,23 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptEvent;
 import me.limeglass.skellett.Metrics;
 import me.limeglass.skellett.Syntax;
+import me.limeglass.skellett.lang.SkellettPropertyCondition;
+import me.limeglass.skellett.lang.SkellettPropertyCondition.PropertyMode;
 import me.limeglass.skellett.Skellett;
 import me.limeglass.skellett.utils.EnumClassInfo;
+import me.limeglass.skellett.utils.ReflectionUtil;
 import me.limeglass.skellett.utils.TypeClassInfo;
 import me.limeglass.skellett.utils.annotations.Disabled;
 import me.limeglass.skellett.utils.annotations.ExpressionProperty;
 import me.limeglass.skellett.utils.annotations.Patterns;
 import me.limeglass.skellett.utils.annotations.Properties;
 import me.limeglass.skellett.utils.annotations.PropertiesAddition;
+import me.limeglass.skellett.utils.annotations.PropertyConditionType;
 import me.limeglass.skellett.utils.annotations.RegisterEnum;
 import me.limeglass.skellett.utils.annotations.RegisterType;
+import me.limeglass.skellett.utils.annotations.Type;
 import me.limeglass.skellett.utils.annotations.User;
+import me.limeglass.skellett.utils.annotations.Versions;
 import me.limeglass.skellett.utils.packets.PacketListener;
 
 public class Register {
@@ -66,6 +73,32 @@ public class Register {
 			if (!clazz.isAnnotationPresent(Disabled.class)) {
 				String[] syntax = null;
 				ExpressionType type = ExpressionType.COMBINED;
+				if (clazz.isAnnotationPresent(Versions.class)) {
+					String server = ReflectionUtil.getVersion();
+					boolean cancel = true;
+					for (String input : ((Versions)clazz.getAnnotation(Versions.class)).value()) {
+						if (server.contains(input)) {
+							cancel = false;
+						}
+					}
+					if (cancel) {
+						List<String> versions = Skellett.getConfiguration("config").getStringList("versions");
+						int spot = 0;
+						for (String input : ((Versions)clazz.getAnnotation(Versions.class)).value()) {
+							for (String version : versions) {
+								if (input.equals(version) && spot + 1 <= versions.size() - 1) {
+									for (int i = spot + 1; i <= versions.size() - 1; i++) {
+										if (server.contains(versions.get(i))) {
+											cancel = false;
+										}
+									}
+								}
+								spot++;
+							}
+						}
+						if (cancel) continue run;
+					}
+				}
 				if (clazz.isAnnotationPresent(Patterns.class)) {
 					syntax = Syntax.register(clazz, ((Patterns)clazz.getAnnotation(Patterns.class)).value());
 				} else if (PropertyExpression.class.isAssignableFrom(clazz) && clazz.isAnnotationPresent(Properties.class)) {
@@ -111,6 +144,20 @@ public class Register {
 						Skript.registerEffect(clazz, syntax);
 						Skellett.debugMessage("&5Registered Effect " + clazz.getSimpleName() + " (" + clazz.getCanonicalName() + ") with syntax " + Arrays.toString(syntax));
 					} else if (Condition.class.isAssignableFrom(clazz)) {
+						if (SkellettPropertyCondition.class.isAssignableFrom(clazz)) {
+							if (clazz.isAnnotationPresent(PropertyConditionType.class) && clazz.isAnnotationPresent(Type.class) && clazz.isAnnotationPresent(Properties.class)) {
+								PropertyMode mode = ((PropertyConditionType)clazz.getAnnotation(PropertyConditionType.class)).value();
+								String[] properties = ((Properties)clazz.getAnnotation(Properties.class)).value();
+								String property = properties.length > 1 ? properties[1] : properties[0];
+								String extraProperty = properties.length > 1 ? properties[0] : "";
+								String propertyType = ((Type)clazz.getAnnotation(Type.class)).value();
+								SkellettPropertyCondition.register(clazz, property, extraProperty + " " + propertyType, mode);
+								Skellett.debugMessage("&5Registered PropertyCondition " + clazz.getSimpleName() + " (" + clazz.getCanonicalName() + ")");
+							} else {
+								Skellett.consoleMessage("There were no properties or types for the PropertyCondition " + " (" + clazz.getCanonicalName() + ")");
+								continue run;
+							}
+						}
 						Skript.registerCondition(clazz, syntax);
 						Skellett.debugMessage("&5Registered Condition " + clazz.getSimpleName() + " (" + clazz.getCanonicalName() + ") with syntax " + Arrays.toString(syntax));
 					} else if (SkriptEvent.class.isAssignableFrom(clazz)) {
@@ -139,4 +186,5 @@ public class Register {
 		});
 		Skellett.debugMessage("Metrics registered!");
 	}
+
 }

@@ -17,4 +17,5 @@ public class CondScoreboardExists extends SkellettCondition {
 		String scoreboard = expressions.getSingle(event, String.class);
 		return (Bukkit.getScoreboardManager().getMainScoreboard().getTeam(scoreboard) != null) ? isNegated() : !isNegated();
 	}
+
 }

@@ -18,4 +18,5 @@ public class CondClientTimeRelative extends SkellettCondition {
 		Player player = expressions.getSingle(event, Player.class);
 		return (player.isPlayerTimeRelative()) ? isNegated() : !isNegated();
 	}
+
 }

@@ -51,4 +51,5 @@ public class PacketEvent extends Event implements Cancellable {
 	public static HandlerList getHandlerList() {
 		return handlers;
 	}
+
 }
