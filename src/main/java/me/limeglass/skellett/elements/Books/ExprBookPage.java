@@ -1,4 +1,4 @@
-package me.limeglass.skellett.elements.Books;
+package me.limeglass.skellett.elements.books;
 
 import java.util.ArrayList;
 import org.bukkit.event.Event;

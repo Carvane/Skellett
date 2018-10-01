@@ -12,7 +12,7 @@ import me.limeglass.skellett.utils.annotations.Versions;
 
 @Name("Silent state")
 @Description("Returns the silent state of the defined entities.")
-@Properties({"entities", "(silent|quiet) [state]"})
+@Properties({"entities", "(silent|quiet) [state]", "{1}[(all [[of] the]|the)]"})
 @Changers(ChangeMode.SET)
 @Versions("1.10")
 public class ExprSilentState extends SkellettPropertyExpression<Entity, Boolean> {

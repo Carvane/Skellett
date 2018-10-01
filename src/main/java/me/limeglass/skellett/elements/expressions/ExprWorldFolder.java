@@ -10,7 +10,7 @@ import me.limeglass.skellett.utils.annotations.Properties;
 
 @Name("World folder")
 @Description("Returns the path folder of the world(s).")
-@Properties({"worlds", "[world] folder"})
+@Properties({"worlds", "[world] folder[s]", "{1}[(all [[of] the]|the)]"})
 public class ExprWorldFolder extends SkellettPropertyExpression<World, String> {
 
 	@Override

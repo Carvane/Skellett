@@ -14,11 +14,12 @@ import me.limeglass.skellett.Syntax;
 public abstract class SkellettEffect extends Effect implements DataChecker {
 
 	protected ExpressionData expressions;
-	protected int patternMark;
+	protected int patternMark, matchedPattern;
 	
 	@Override
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		if (expressions != null && getSyntax() != null) this.expressions = new ExpressionData(expressions, getSyntax()[0]);
+		this.matchedPattern = matchedPattern;
 		this.patternMark = parser.mark;
 		return true;
 	}

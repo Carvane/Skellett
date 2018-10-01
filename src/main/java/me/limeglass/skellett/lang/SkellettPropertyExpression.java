@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.bukkit.event.Event;
 
-import ch.njol.skript.classes.Changer;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -60,7 +60,7 @@ public abstract class SkellettPropertyExpression<F, T> extends PropertyExpressio
 	}
 	
 	@Override
-	public Class<?>[] acceptChange(final Changer.ChangeMode mode) {
+	public Class<?>[] acceptChange(ChangeMode mode) {
 		Class<?>[] returnable = (getClass().isAnnotationPresent(Multiple.class)) ? CollectionUtils.array(Utils.getArrayClass(expressionClass)) : CollectionUtils.array(expressionClass);
 		if (getClass().isAnnotationPresent(Settable.class)) returnable = getClass().getAnnotation(Settable.class).values();
 		if (getClass().isAnnotationPresent(AllChangers.class)) return returnable;

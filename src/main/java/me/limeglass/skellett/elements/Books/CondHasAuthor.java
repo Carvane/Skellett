@@ -1,4 +1,4 @@
-package me.limeglass.skellett.elements.Books;
+package me.limeglass.skellett.elements.books;
 
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
